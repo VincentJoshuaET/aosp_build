@@ -10,5 +10,6 @@ else
 endif
 
 GAPPS_LOCAL_OVERRIDES_PACKAGES := PackageInstaller
+LOCAL_PRODUCT_MODULE := true
 
 include $(BUILD_GAPPS_PREBUILT_APK)

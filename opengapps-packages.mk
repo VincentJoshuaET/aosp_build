@@ -3,12 +3,7 @@ include vendor/opengapps/build/config.mk
 include vendor/opengapps/build/opengapps-files.mk
 
 DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/pico
-
-ifneq ($(filter 28,$(call get-allowed-api-levels)),)
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/assistant/28
-endif
+    $(GAPPS_DEVICE_FILES_PATH)/overlay/google
 
 GAPPS_PRODUCT_PACKAGES += \
     GoogleBackupTransport \
@@ -21,82 +16,28 @@ GAPPS_PRODUCT_PACKAGES += \
     GoogleLoginService \
     SetupWizard \
     Phonesky \
-    GoogleCalendarSyncAdapter
-
-ifneq ($(filter 23,$(call get-allowed-api-levels)),)
-GAPPS_PRODUCT_PACKAGES += \
+    GoogleCalendarSyncAdapter \
     GoogleTTS \
-    GooglePackageInstaller
-endif
-
-## in oreo (api level 26), installing PrebuiltGmsCoreInstantApps
-## causes Play Store app-installs to get stuck on "Download
-## pending...".  Do not install on oreo and above.
-ifeq ($(filter 26,$(call get-allowed-api-levels)),)
-ifneq ($(filter 24,$(call get-allowed-api-levels)),)
-GAPPS_PRODUCT_PACKAGES += \
-    PrebuiltGmsCoreInstantApps
-endif
-endif
-
-ifneq ($(filter 25,$(call get-allowed-api-levels)),)
-GAPPS_PRODUCT_PACKAGES += \
-    Turbo
-endif
-
-ifneq ($(filter 26,$(call get-allowed-api-levels)),)
-GAPPS_PRODUCT_PACKAGES += \
+    GooglePackageInstaller \
+    Turbo \
     AndroidPlatformServices \
     GmsCoreSetupPrebuilt \
-    AndroidMigratePrebuilt
-endif
-
-ifneq ($(filter nano,$(TARGET_GAPPS_VARIANT)),) # require at least nano
-GAPPS_PRODUCT_PACKAGES += \
+    AndroidMigratePrebuilt \
     libjni_latinimegoogle \
-    Velvet
-
-ifneq ($(filter 28,$(call get-allowed-api-levels)),)
-GAPPS_PRODUCT_PACKAGES += \
+    Velvet \
     DigitalWellbeing \
     MarkupGoogle \
-    SoundPicker
-endif
-
-ifneq ($(filter micro,$(TARGET_GAPPS_VARIANT)),) # require at least micro
-GAPPS_PRODUCT_PACKAGES += \
+    SoundPicker \
     CalendarGooglePrebuilt \
     PrebuiltExchange3Google \
-    PrebuiltGmail
-
-ifneq ($(filter 26,$(call get-allowed-api-levels)),)
-GAPPS_FORCE_PIXEL_LAUNCHER := true
-else
-GAPPS_PRODUCT_PACKAGES += \
-    GoogleNow
-endif
-
-ifeq ($(filter 23,$(call get-allowed-api-levels)),)
-GAPPS_PRODUCT_PACKAGES += \
-    GoogleTTS
-endif
-
-ifneq ($(filter mini,$(TARGET_GAPPS_VARIANT)),) # require at least mini
-GAPPS_PRODUCT_PACKAGES += \
+    PrebuiltGmail \
     CalculatorGoogle \
     PrebuiltDeskClockGoogle \
-    Hangouts \
     Maps \
     Photos \
-    YouTube
-
-ifneq ($(filter full,$(TARGET_GAPPS_VARIANT)),) # require at least full
-
-GAPPS_FORCE_BROWSER_OVERRIDES := true
-GAPPS_PRODUCT_PACKAGES += \
+    YouTube \
     Books \
     CloudPrint2 \
-    EditorsDocs \
     Drive \
     FitnessPrebuilt \
     PrebuiltKeep \
@@ -104,131 +45,67 @@ GAPPS_PRODUCT_PACKAGES += \
     Music2 \
     Newsstand \
     PlayGames \
-    EditorsSheets \
-    EditorsSlides \
-    talkback
-
-ifneq ($(filter stock,$(TARGET_GAPPS_VARIANT)),) # require at least stock
-
-GAPPS_FORCE_MMS_OVERRIDES := true
-GAPPS_FORCE_WEBVIEW_OVERRIDES := true
-GAPPS_PRODUCT_PACKAGES += \
-    GoogleCamera \
+    talkback \
     GoogleContacts \
     LatinImeGoogle \
     StorageManagerGoogle \
     TagGoogle \
-    GoogleVrCore
-
-ifneq ($(filter 23,$(call get-allowed-api-levels)),)
-GAPPS_FORCE_DIALER_OVERRIDES := true
-endif
-ifneq ($(filter 24,$(call get-allowed-api-levels)),)
-GAPPS_PRODUCT_PACKAGES += \
+    GoogleVrCore \
     GooglePrintRecommendationService \
     GoogleExtServices \
-    GoogleExtShared
-endif
-
-ifneq ($(filter super,$(TARGET_GAPPS_VARIANT)),)
-
-GAPPS_PRODUCT_PACKAGES += \
+    GoogleExtShared \
     Wallet \
-    DMAgent \
     CarrierServices \
     GoogleEarth \
     GCS \
-    GoogleHindiIME \
-    GoogleJapaneseInput \
-    KoreanIME \
-    GooglePinyinIME \
-    Tycho \
     Street \
     TranslatePrebuilt \
-    GoogleZhuyinIME
+    ActionsServices \
+    WebViewGoogle \
+    Chrome \
+    GoogleDialer \
+    PrebuiltBugle \
+    PixelLauncher \
+    Wallpapers \
+    SafetyHubPrebuilt \
+    PixelThemesStub2019 \
+    PixelLiveWallpaperPrebuilt \
+    MicropaperPrebuilt \
+    NexusWallpapersStubPrebuilt2019 \
+    LocationHistoryPrebuilt \
+    NgaResources \
+    arcore \
+    RecorderPrebuilt
 
-ifneq ($(filter 28,$(call get-allowed-api-levels)),)
-GAPPS_PRODUCT_PACKAGES += \
-    ActionsServices
-endif
+GAPPS_FORCE_PIXEL_LAUNCHER := true
+GAPPS_FORCE_BROWSER_OVERRIDES := true
+GAPPS_FORCE_MMS_OVERRIDES := true
+GAPPS_FORCE_WEBVIEW_OVERRIDES := true
+GAPPS_FORCE_DIALER_OVERRIDES := true
 
-endif # end super
-endif # end stock
-endif # end full
-endif # end mini
-endif # end micro
-endif # end nano
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.boot.vendor.overlay.theme=com.android.internal.systemui.navbar.gestural \
+    ro.com.google.ime.bs_theme=true \
+    ro.com.google.ime.theme_id=5 \
+    ro.com.google.ime.system_lm_dir=/product/usr/share/ime/google/d3_lms \
+    setupwizard.feature.baseline_setupwizard_enabled=true \
+    ro.setupwizard.enterprise_mode=1 \
+    ro.setupwizard.rotation_locked=true \
+    setupwizard.enable_assist_gesture_training=true \
+    setupwizard.theme=glif_v3_light \
+    setupwizard.feature.skip_button_use_mobile_data.carrier1839=true \
+    setupwizard.feature.show_pai_screen_in_main_flow.carrier1839=false \
+    setupwizard.feature.show_pixel_tos=false \
+    ro.storage_manager.show_opt_in=false \
+    ro.opa.eligible_device=true \
+    ro.url.legal=http://www.google.com/intl/%s/mobile/android/basic/phone-legal.html \
+    ro.url.legal.android_privacy=http://www.google.com/intl/%s/mobile/android/basic/privacy.html \
+    ro.com.google.clientidbase=android-google \
+    ro.error.receiver.system.apps=com.google.android.gms \
+    ro.atrace.core.services=com.google.android.gms,com.google.android.gms.ui,com.google.android.gms.persistent
 
 # This needs to be at the end of standard files, but before the GAPPS_FORCE_* options,
 # since those also affect DEVICE_PACKAGE_OVERLAYS. We don't want to exclude a package
 # that also has an overlay, since that will make us use the overlay but not have the
 # package. This can cause issues.
 PRODUCT_PACKAGES += $(filter-out $(GAPPS_EXCLUDED_PACKAGES),$(GAPPS_PRODUCT_PACKAGES))
-
-ifeq ($(GAPPS_FORCE_WEBVIEW_OVERRIDES),true)
-ifneq ($(filter 29,$(call get-allowed-api-levels)),)
-# starting with Q, put the overlay in a product APK
-PRODUCT_PACKAGES += GoogleWebViewOverlay
-else ifneq ($(filter 24,$(call get-allowed-api-levels)),)
-# starting with nougat, use a different overlay
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/webview/24
-else
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/webview/21
-endif
-PRODUCT_PACKAGES += \
-    WebViewGoogle
-endif
-
-ifeq ($(GAPPS_FORCE_BROWSER_OVERRIDES),true)
-ifneq ($(filter 23,$(call get-allowed-api-levels)),)
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/browser
-endif
-PRODUCT_PACKAGES += \
-    Chrome
-endif
-
-ifneq ($(filter 23,$(call get-allowed-api-levels)),)
-ifeq ($(GAPPS_FORCE_DIALER_OVERRIDES),true)
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/dialer
-
-PRODUCT_PACKAGES += \
-    GoogleDialer
-endif
-endif
-
-ifeq ($(GAPPS_FORCE_MMS_OVERRIDES),true)
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/mms
-
-PRODUCT_PACKAGES += \
-    PrebuiltBugle
-endif
-
-ifeq ($(GAPPS_FORCE_PIXEL_LAUNCHER),true)
-
-ifneq ($(filter 26,$(call get-allowed-api-levels)),)
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/pixelicons/26
-else ifneq ($(filter 25,$(call get-allowed-api-levels)),)
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/pixelicons/25
-endif
-
-ifneq ($(filter 28,$(call get-allowed-api-levels)),)
-DEVICE_PACKAGE_OVERLAYS += \
-    $(GAPPS_DEVICE_FILES_PATH)/overlay/pixellauncher/28
-endif
-
-ifneq ($(filter 25,$(call get-allowed-api-levels)),)
-PRODUCT_PACKAGES += \
-    PixelLauncherIcons
-endif
-
-PRODUCT_PACKAGES += \
-    PixelLauncher \
-    Wallpapers
-endif

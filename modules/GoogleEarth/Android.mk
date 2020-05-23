@@ -3,5 +3,6 @@ include $(CLEAR_VARS)
 include $(GAPPS_CLEAR_VARS)
 LOCAL_MODULE := GoogleEarth
 LOCAL_PACKAGE_NAME := com.google.earth
+LOCAL_PRODUCT_MODULE := true
 
 include $(BUILD_GAPPS_PREBUILT_APK)

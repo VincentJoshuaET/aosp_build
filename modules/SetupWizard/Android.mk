@@ -13,8 +13,9 @@ else
     LOCAL_PACKAGE_NAME := com.google.android.setupwizard.default
   endif
 endif
+LOCAL_PRODUCT_MODULE := true
 
 LOCAL_PRIVILEGED_MODULE := true
-LOCAL_OVERRIDES_PACKAGES := Provision
+LOCAL_OVERRIDES_PACKAGES := Provision LineageSetupWizard
 
 include $(BUILD_GAPPS_PREBUILT_APK)
